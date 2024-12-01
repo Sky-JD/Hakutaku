@@ -5,7 +5,7 @@ project(Hakutaku)
 set(CMAKE_CXX_STANDARD 23)
 
 # PROJECT SETTING
-set(BUILD_UNIT_TEST ON)
+#set(BUILD_UNIT_TEST ON)
 
 # PLATFORM SETTING
 set(HAKUTAKU_64BIT ON) # 64bit platform
@@ -27,7 +27,7 @@ if(IGNORE_MISSING_PAGE)
     add_definitions(-DIGNORE_MISSING_PAGE)
 endif()
 
-if(BUILD_UNIT_TEST)
+#[[if(BUILD_UNIT_TEST)
     add_subdirectory(library/googletest)
     include_directories(googletest/include googletest)
 
@@ -40,5 +40,5 @@ else()
     message("-- Build common")
     add_executable(Hakutaku main.cpp
             core/Hakutaku.hpp)
-endif()
+endif()]]
 

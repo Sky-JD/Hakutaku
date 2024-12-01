@@ -16,6 +16,11 @@
 #include <sys/mman.h>
 #include <iconv.h>
 #include <sys/uio.h>
+#include <any>
+#include <set>
+#include <functional>
+#include <type_traits>
+#include <algorithm>
 
 /*
  * 倘如你需要更多的帮助，你可以阅读
@@ -42,6 +47,7 @@ typedef long Pointer;
 #define RESULT_OUT_RANGE (-9)
 
 #define RANGE_ALL 8190
+#define RANGE_XA 1
 #define RANGE_BAD 2 //
 #define RANGE_V 4 // kgsl-3d0
 #define RANGE_CA 8
@@ -754,6 +760,9 @@ namespace Hakutaku {
             return true;
         if (strstr(buff, "rw") == nullptr) return false;
         if ((range & RANGE_A) == RANGE_A &&strlen(buff) < 46) return true;
+        if ((range & RANGE_XA) == RANGE_XA && strstr(buff, "/data/app/") != nullptr /*&& strstr(buff, ".so") != nullptr*/) {
+            return true;
+        }
         if ((range & RANGE_BAD) == RANGE_BAD && strstr(buff, "/system/fonts") != nullptr) // 部分修改器认为BAD内存为kgsl-3d0
             return true;
         if ((range & RANGE_V) == RANGE_V && strstr(buff, "/dev/kgsl-3d0") != nullptr)
@@ -762,7 +771,7 @@ namespace Hakutaku {
             return true;
         if ((range & RANGE_CB) == RANGE_CB && strstr(buff, "[anon:.bss]") != nullptr)
             return true;
-        if ((range & RANGE_CD) == RANGE_CD && strstr(buff, "/data/") != nullptr)
+        if ((range & RANGE_CD) == RANGE_CD && (strstr(buff, "/data/data/") != nullptr || strstr(buff, "[anon:/data/user/0/") != nullptr))
             return true;
         if ((range & RANGE_CH) == RANGE_CH && strstr(buff, "[heap]") != nullptr)
             return true;
